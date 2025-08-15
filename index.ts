@@ -1,3 +1,4 @@
+// index.ts
 import app from "./app";
 
 Bun.serve({
