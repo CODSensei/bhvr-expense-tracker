@@ -1,8 +1,8 @@
 // routes/expenses.ts
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import type { Expense } from "../../types/type";
-import { createExpenseSchema } from "../../validation/expenseValidation";
+import type { Expense } from "../../shared/types/type";
+import { createExpenseSchema } from "../../shared/validation/expenseValidation";
 
 const fakeExpenses: Expense[] = [
   { id: 1, title: "Groceries", amount: 1200 },
