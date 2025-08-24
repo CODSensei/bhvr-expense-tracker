@@ -1,13 +1,8 @@
 // routes/expenses.ts
 import { Hono } from "hono";
-import z from "zod";
 import { zValidator } from "@hono/zod-validator";
-
-type Expense = {
-  id: number;
-  title: string;
-  amount: number;
-};
+import type { Expense } from "../types/type";
+import { createExpenseSchema } from "../validation/expenseValidation";
 
 const fakeExpenses: Expense[] = [
   { id: 1, title: "Groceries", amount: 1200 },
@@ -17,22 +12,33 @@ const fakeExpenses: Expense[] = [
   { id: 5, title: "Coffee", amount: 250 },
 ];
 
-// uses zod to validate if post request contain valid data
-const createExpenseSchema = z.object({
-  title: z.string(),
-  amount: z.number().int().positive(),
-});
-
 // we created a sub-app which will be mounted on main app
 export const expensesRoute = new Hono()
   .get("/", (c) => {
     // console.log("get: ", c);
     return c.json({ expenses: fakeExpenses });
   })
-  .post("/", async (c) => {
+  .post("/", zValidator("json", createExpenseSchema), async (c) => {
     // console.log("post: ", c);
-    const request = await c.req.json();
-    const expense = createExpenseSchema.parse(request);
-    console.log({ expense });
+    const expense = await c.req.valid("json");
+    fakeExpenses.push({ ...expense, id: fakeExpenses.length + 1 });
+    c.status(201);
     return c.json(expense);
+  })
+  .get("/:id{[0-9]+}", (c) => {
+    const id = Number.parseInt(c.req.param("id"));
+    const expense = fakeExpenses.find((expense) => expense.id === id);
+    if (!expense) {
+      return c.notFound();
+    }
+    return c.json({ expense });
+  })
+  .delete("/:id{[0-9]+}", (c) => {
+    const id = Number.parseInt(c.req.param("id"));
+    const index = fakeExpenses.findIndex((expense) => expense.id === id);
+    if (index === -1) {
+      return c.notFound();
+    }
+    const deletedExpense = fakeExpenses.splice(index, 1)[0];
+    return c.json({ expense: deletedExpense });
   });
