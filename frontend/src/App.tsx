@@ -11,7 +11,13 @@ function App() {
   const [totalSpent, setTotalSpent] = useState(0);
 
   useEffect(() => {
-    fetch("api/expenses/total-spent");
+    const fetchTotalSpent = async () => {
+      const response = await fetch("api/expenses/total-spent");
+      const data = await response.json();
+
+      setTotalSpent(data.total);
+    };
+    fetchTotalSpent();
   }, []);
 
   return (
