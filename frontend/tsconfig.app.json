@@ -10,7 +10,8 @@
     // shadcn
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@server/*": ["../server/*"]
     },
 
     /* Bundler mode */
