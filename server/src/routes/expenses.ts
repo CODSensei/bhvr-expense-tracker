@@ -1,17 +1,9 @@
+// server/src/routes/expenses.ts
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import z from "zod";
+import { createPostSchema, type Expense } from "@shared/types";
 
-// validation and types
-const ExpenseSchema = z.object({
-  id: z.number().int().positive().min(1),
-  title: z.string().min(3).max(100),
-  amount: z.number().int().positive(),
-});
-
-const createPostSchema = ExpenseSchema.omit({ id: true });
-type Expense = z.infer<typeof ExpenseSchema>;
-
+// dummy data
 const fakeExpenses: Expense[] = [
   { id: 1, title: "Groceries", amount: 1200 },
   { id: 2, title: "Electricity Bill", amount: 850 },
@@ -20,6 +12,7 @@ const fakeExpenses: Expense[] = [
   { id: 5, title: "Coffee", amount: 250 },
 ];
 
+// api routes of expenses
 export const expensesRoutes = new Hono()
 
   .get("/", (c) => {
@@ -40,6 +33,7 @@ export const expensesRoutes = new Hono()
     if (!expense) return c.notFound();
     return c.json({ expense });
   })
+
   .delete("/:id{[0-9]+}", async (c) => {
     const id = Number.parseInt(c.req.param("id"));
     const index = fakeExpenses.findIndex((expense) => expense.id === id);

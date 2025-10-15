@@ -1,1 +1,2 @@
-console.log("Hello via Bun!");
+// shared/src/index.ts
+import * as types from "./types";
