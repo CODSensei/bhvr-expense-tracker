@@ -8,9 +8,17 @@ export default defineConfig({
   plugins: [tailwindcss(), react()],
   resolve: {
     alias: {
-      "@client": path.resolve(__dirname, "./src"),
+      "@": path.resolve(__dirname, "./src"),
       "@server": path.resolve(__dirname, "../server/src"),
       "@shared": path.resolve(__dirname, "../shared/src"),
+    },
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:3000",
+        changeOrigin: true,
+      },
     },
   },
 });

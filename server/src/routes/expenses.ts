@@ -27,14 +27,20 @@ export const expensesRoutes = new Hono()
     return c.json({ expense });
   })
 
-  .get("/:id{[0-9]+}", async (c) => {
+  .get("/:id{[0-9]+}", (c) => {
     const id = Number.parseInt(c.req.param("id"));
     const expense = fakeExpenses.find((expense) => expense.id === id);
     if (!expense) return c.notFound();
     return c.json({ expense });
   })
-
-  .delete("/:id{[0-9]+}", async (c) => {
+  .get("/total-spent", (c) => {
+    const total = fakeExpenses.reduce(
+      (acc, expense) => acc + expense.amount,
+      0
+    );
+    return c.json({ total });
+  })
+  .delete("/:id{[0-9]+}", (c) => {
     const id = Number.parseInt(c.req.param("id"));
     const index = fakeExpenses.findIndex((expense) => expense.id === id);
     if (index === -1) return c.notFound();
