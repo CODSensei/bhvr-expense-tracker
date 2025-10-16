@@ -1,4 +1,3 @@
-// shared/src/types/index.ts
 import { z } from "zod";
 
 // validation and types

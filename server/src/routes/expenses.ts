@@ -1,7 +1,7 @@
 // server/src/routes/expenses.ts
 import { zValidator } from "@hono/zod-validator";
+import { createPostSchema, type Expense } from "@server/types/types";
 import { Hono } from "hono";
-import { createPostSchema, type Expense } from "@shared/types";
 
 // dummy data
 const fakeExpenses: Expense[] = [
