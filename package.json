@@ -2,8 +2,7 @@
   "name": "bhvr",
   "workspaces": [
     "./server",
-    "./client",
-    "./shared"
+    "./client"
   ],
   "scripts": {
     "dev:client": "cd client && bun run dev",
